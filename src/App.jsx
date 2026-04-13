@@ -1,4 +1,11 @@
-import { BrowserRouter, Route, Routes, useLocation, useNavigate } from "react-router-dom";
+import {
+  BrowserRouter,
+  Navigate,
+  Route,
+  Routes,
+  useLocation,
+  useNavigate,
+} from "react-router-dom";
 import "./App.css";
 import MoodPage from "./pages/MoodPage";
 import AgePage from "./pages/AgePage";
@@ -8,18 +15,31 @@ import FeedbackPage from "./pages/FeedbackPage";
 import { useEffect } from "react";
 import { getLatestPath } from "./utils/progress";
 
+function normalizePath(pathname) {
+  if (pathname.length > 1 && pathname.endsWith("/")) {
+    return pathname.slice(0, -1);
+  }
+  return pathname;
+}
+
 function ProgressGuard() {
   const location = useLocation();
   const navigate = useNavigate();
 
   useEffect(() => {
     const latestPath = getLatestPath();
-    if (location.pathname !== latestPath) {
+    const currentPath = normalizePath(location.pathname);
+
+    if (currentPath !== latestPath) {
       navigate(latestPath, { replace: true });
     }
   }, [location.pathname, navigate]);
 
   return null;
+}
+
+function LatestRedirect() {
+  return <Navigate to={getLatestPath()} replace />;
 }
 
 function App() {
@@ -32,6 +52,7 @@ function App() {
         <Route path="/harry-potter-game" element={<HarryPotterGame />} />
         <Route path="/breakfast" element={<BreakfastPage />} />
         <Route path="/feedback" element={<FeedbackPage />} />
+        <Route path="*" element={<LatestRedirect />} />
       </Routes>
     </BrowserRouter>
   );

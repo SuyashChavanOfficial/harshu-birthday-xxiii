@@ -1,6 +1,6 @@
-import { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import MoodCard from "../components/MoodCard";
+import { advanceToPath } from "../utils/progress";
 
 const moods = [
   { label: "Chill", emoji: "😌", value: "chill" },
@@ -12,17 +12,11 @@ const moods = [
 const MoodPage = () => {
   const navigate = useNavigate();
 
-  useEffect(() => {
-    const savedMood = localStorage.getItem("mood");
-    if (savedMood) {
-      navigate("/age");
-    }
-  }, [navigate]);
-
   const handleSelect = (mood) => {
     navigator.vibrate?.(50);
     localStorage.setItem("mood", mood);
-    navigate("/age");
+    advanceToPath("/age");
+    navigate("/age", { replace: true });
   };
 
   return (

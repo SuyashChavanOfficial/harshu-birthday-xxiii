@@ -2,6 +2,7 @@ import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { breakfastItems } from "../helpers/breakfastItems";
 import { sendBreakfastEmail } from "../utils/emailService";
+import { advanceToPath } from "../utils/progress";
 
 const getISTHour = () => {
   const now = new Date();
@@ -43,9 +44,11 @@ const BreakfastPage = () => {
 
     try {
       await sendBreakfastEmail(cart);
+      localStorage.setItem("breakfast_confirmed", "true");
+      advanceToPath("/feedback");
       setInfoMessage("Order sent successfully. Redirecting...");
       setTimeout(() => {
-        navigate("/feedback");
+        navigate("/feedback", { replace: true });
       }, 800);
     } catch (error) {
       console.error("Breakfast email send failed:", error);

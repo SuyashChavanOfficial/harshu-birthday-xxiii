@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { sendFeedbackEmail } from "../utils/emailService";
+import { advanceToPath } from "../utils/progress";
 
 const FeedbackPage = () => {
   const [rating, setRating] = useState(0);
@@ -17,6 +18,8 @@ const FeedbackPage = () => {
 
     try {
       await sendFeedbackEmail({ rating, feedback });
+      localStorage.setItem("feedback_submitted", "true");
+      advanceToPath("/feedback");
       setSubmitted(true);
     } catch (error) {
       const message =

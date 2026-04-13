@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { getRandomMessage } from "../helpers/ageMessages";
 import { useNavigate } from "react-router-dom";
+import { advanceToPath } from "../utils/progress";
 
 const AgePage = () => {
   const [age, setAge] = useState(18);
@@ -30,8 +31,8 @@ const AgePage = () => {
     }
 
     localStorage.setItem("age", String(age));
-
-    navigate("/harry-potter-game");
+    advanceToPath("/harry-potter-game");
+    navigate("/harry-potter-game", { replace: true });
   };
 
   return (

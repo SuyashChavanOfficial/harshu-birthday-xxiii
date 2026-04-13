@@ -1,6 +1,7 @@
 import { useState, useRef } from "react";
 import { useNavigate } from "react-router-dom";
 import { hpQuestions } from "../helpers/hpQuestions";
+import { advanceToPath } from "../utils/progress";
 
 const TOTAL_QUESTIONS = 10;
 
@@ -58,7 +59,9 @@ const HarryPotterGame = () => {
     if (percentage >= 50) {
       navigator.vibrate?.(50);
       alert("You passed! Mischief Managed 🪄");
-      navigate("/breakfast");
+      localStorage.setItem("hp_passed", "true");
+      advanceToPath("/breakfast");
+      navigate("/breakfast", { replace: true });
     } else {
       alert("You need more magic 😏 Try again!");
       window.location.reload();

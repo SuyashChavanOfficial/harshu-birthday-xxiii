@@ -31,7 +31,7 @@ const AgePage = () => {
 
     localStorage.setItem("age", String(age));
 
-    navigate("/game");
+    navigate("/harry-potter-game");
   };
 
   return (

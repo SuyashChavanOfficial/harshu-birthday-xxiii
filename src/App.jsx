@@ -2,7 +2,9 @@ import { BrowserRouter, Route, Routes } from "react-router-dom";
 import "./App.css";
 import MoodPage from "./pages/MoodPage";
 import AgePage from "./pages/AgePage";
-import HeartGame from "./pages/HeartGame";
+import HarryPotterGame from "./pages/HarryPotterGame";
+import BreakfastPage from "./pages/BreakfastPage";
+import FeedbackPage from "./pages/FeedbackPage";
 
 function App() {
   return (
@@ -10,7 +12,9 @@ function App() {
       <Routes>
         <Route path="/" element={<MoodPage />} />
         <Route path="/age" element={<AgePage />} />
-        <Route path="/game" element={<HeartGame />} />
+        <Route path="/harry-potter-game" element={<HarryPotterGame />} />
+        <Route path="/breakfast" element={<BreakfastPage />} />
+        <Route path="/feedback" element={<FeedbackPage />} />
       </Routes>
     </BrowserRouter>
   );

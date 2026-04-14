@@ -1,12 +1,25 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { getRandomMessage } from "../helpers/ageMessages";
 import { useNavigate } from "react-router-dom";
-import { advanceToPath } from "../utils/progress";
 
 const AgePage = () => {
   const [age, setAge] = useState(18);
   const [error, setError] = useState("");
   const navigate = useNavigate();
+
+  useEffect(() => {
+    const mood = localStorage.getItem("mood");
+    const storedAge = localStorage.getItem("age");
+
+    if (!mood) {
+      navigate("/", { replace: true });
+      return;
+    }
+
+    if (storedAge === "23") {
+      navigate("/harry-potter-game", { replace: true });
+    }
+  }, [navigate]);
 
   const increase = () => {
     navigator.vibrate?.(30);
@@ -31,7 +44,6 @@ const AgePage = () => {
     }
 
     localStorage.setItem("age", String(age));
-    advanceToPath("/harry-potter-game");
     navigate("/harry-potter-game", { replace: true });
   };
 

@@ -1,7 +1,6 @@
-import { useState, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { hpQuestions } from "../helpers/hpQuestions";
-import { advanceToPath } from "../utils/progress";
 
 const TOTAL_QUESTIONS = 10;
 
@@ -25,14 +24,37 @@ const HarryPotterGame = () => {
   const correctSound = useRef(new Audio("/sounds/pop.mp3"));
   const wrongSound = useRef(new Audio("/sounds/fail.mp3"));
 
+  useEffect(() => {
+    const mood = localStorage.getItem("mood");
+    const age = localStorage.getItem("age");
+    const hpPassed = localStorage.getItem("hp_passed");
+
+    if (!mood) {
+      navigate("/", { replace: true });
+      return;
+    }
+
+    if (age !== "23") {
+      navigate("/age", { replace: true });
+      return;
+    }
+
+    if (hpPassed === "true") {
+      navigate("/lunch", { replace: true });
+    }
+  }, [navigate]);
+
   const handleAnswer = (option) => {
     if (showResult) return;
 
     const currentQ = questions[current];
+    const isCorrect = option === currentQ.answer;
+    const nextScore = isCorrect ? score + 1 : score;
+
     setSelected(option);
     setShowResult(true);
 
-    if (option === currentQ.answer) {
+    if (isCorrect) {
       correctSound.current.currentTime = 0;
       correctSound.current.play();
       setScore((prev) => prev + 1);
@@ -48,19 +70,18 @@ const HarryPotterGame = () => {
         setSelected(null);
         setShowResult(false);
       } else {
-        handleFinish();
+        handleFinish(nextScore);
       }
     }, 1000);
   };
 
-  const handleFinish = () => {
-    const percentage = (score / TOTAL_QUESTIONS) * 100;
+  const handleFinish = (finalScore) => {
+    const percentage = (finalScore / TOTAL_QUESTIONS) * 100;
 
     if (percentage >= 50) {
       navigator.vibrate?.(50);
       alert("You passed! Mischief Managed 🪄");
       localStorage.setItem("hp_passed", "true");
-      advanceToPath("/lunch");
       navigate("/lunch", { replace: true });
     } else {
       alert("You need more magic 😏 Try again!");

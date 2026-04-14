@@ -1,8 +1,7 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { lunchItems } from "../helpers/lunchItems";
 import { sendLunchEmail } from "../utils/emailService";
-import { advanceToPath } from "../utils/progress";
 
 const LunchPage = () => {
   const navigate = useNavigate();
@@ -10,6 +9,32 @@ const LunchPage = () => {
   const [isSending, setIsSending] = useState(false);
   const [errorMessage, setErrorMessage] = useState("");
   const [infoMessage, setInfoMessage] = useState("");
+
+  useEffect(() => {
+    const mood = localStorage.getItem("mood");
+    const age = localStorage.getItem("age");
+    const hpPassed = localStorage.getItem("hp_passed");
+    const lunchConfirmed = localStorage.getItem("lunch_confirmed");
+
+    if (!mood) {
+      navigate("/", { replace: true });
+      return;
+    }
+
+    if (age !== "23") {
+      navigate("/age", { replace: true });
+      return;
+    }
+
+    if (hpPassed !== "true") {
+      navigate("/harry-potter-game", { replace: true });
+      return;
+    }
+
+    if (lunchConfirmed === "true") {
+      navigate("/feedback", { replace: true });
+    }
+  }, [navigate]);
 
   const toggleItem = (item) => {
     setCart((prev) =>
@@ -27,7 +52,6 @@ const LunchPage = () => {
     try {
       await sendLunchEmail(cart);
       localStorage.setItem("lunch_confirmed", "true");
-      advanceToPath("/feedback");
       setInfoMessage("Order sent successfully. Redirecting...");
       setTimeout(() => {
         navigate("/feedback", { replace: true });

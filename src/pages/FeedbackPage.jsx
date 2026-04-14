@@ -1,14 +1,43 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
 import { sendFeedbackEmail } from "../utils/emailService";
-import { advanceToPath } from "../utils/progress";
 
 const FeedbackPage = () => {
   const [rating, setRating] = useState(0);
   const [hover, setHover] = useState(0);
   const [feedback, setFeedback] = useState("");
-  const [submitted, setSubmitted] = useState(false);
+  const [submitted, setSubmitted] = useState(
+    localStorage.getItem("feedback_submitted") === "true",
+  );
   const [isSending, setIsSending] = useState(false);
   const [errorMessage, setErrorMessage] = useState("");
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    const mood = localStorage.getItem("mood");
+    const age = localStorage.getItem("age");
+    const hpPassed = localStorage.getItem("hp_passed");
+    const lunchConfirmed = localStorage.getItem("lunch_confirmed");
+
+    if (!mood) {
+      navigate("/", { replace: true });
+      return;
+    }
+
+    if (age !== "23") {
+      navigate("/age", { replace: true });
+      return;
+    }
+
+    if (hpPassed !== "true") {
+      navigate("/harry-potter-game", { replace: true });
+      return;
+    }
+
+    if (lunchConfirmed !== "true") {
+      navigate("/lunch", { replace: true });
+    }
+  }, [navigate]);
 
   const handleSubmit = async () => {
     if (rating === 0 || feedback.trim() === "" || isSending) return;
@@ -19,7 +48,6 @@ const FeedbackPage = () => {
     try {
       await sendFeedbackEmail({ rating, feedback });
       localStorage.setItem("feedback_submitted", "true");
-      advanceToPath("/feedback");
       setSubmitted(true);
     } catch (error) {
       const message =

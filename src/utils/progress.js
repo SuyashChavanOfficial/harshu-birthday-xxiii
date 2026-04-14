@@ -1,6 +1,6 @@
 const PROGRESS_KEY = "progress_step";
 
-export const ROUTE_STEPS = ["/", "/age", "/harry-potter-game", "/breakfast", "/feedback"];
+export const ROUTE_STEPS = ["/", "/age", "/harry-potter-game", "/lunch", "/feedback"];
 
 const readStoredStep = () => {
   const raw = localStorage.getItem(PROGRESS_KEY);
@@ -11,6 +11,7 @@ const readStoredStep = () => {
 
 const getDerivedStep = () => {
   if (localStorage.getItem("feedback_submitted") === "true") return 4;
+  if (localStorage.getItem("lunch_confirmed") === "true") return 4;
   if (localStorage.getItem("breakfast_confirmed") === "true") return 4;
   if (localStorage.getItem("hp_passed") === "true") return 3;
   if (localStorage.getItem("age") === "23") return 2;
@@ -32,4 +33,3 @@ export const advanceToPath = (path) => {
   const next = Math.max(getLatestStep(), target);
   localStorage.setItem(PROGRESS_KEY, String(next));
 };
-

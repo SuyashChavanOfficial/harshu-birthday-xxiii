@@ -10,7 +10,7 @@ import "./App.css";
 import MoodPage from "./pages/MoodPage";
 import AgePage from "./pages/AgePage";
 import HarryPotterGame from "./pages/HarryPotterGame";
-import BreakfastPage from "./pages/BreakfastPage";
+import LunchPage from "./pages/LunchPage";
 import FeedbackPage from "./pages/FeedbackPage";
 import { useEffect } from "react";
 import { getLatestPath } from "./utils/progress";
@@ -50,7 +50,7 @@ function App() {
         <Route path="/" element={<MoodPage />} />
         <Route path="/age" element={<AgePage />} />
         <Route path="/harry-potter-game" element={<HarryPotterGame />} />
-        <Route path="/breakfast" element={<BreakfastPage />} />
+        <Route path="/lunch" element={<LunchPage />} />
         <Route path="/feedback" element={<FeedbackPage />} />
         <Route path="*" element={<LatestRedirect />} />
       </Routes>

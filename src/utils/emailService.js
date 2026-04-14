@@ -6,7 +6,7 @@ const FEEDBACK_TEMPLATE_ID = "template_vdj2fu6";
 const PUBLIC_KEY = "uv8YiHRC8KbiQsy1C";
 const TO_EMAIL = "suyashchavanofficial@gmail.com";
 
-export const sendBreakfastEmail = async (cartItems) => {
+export const sendLunchEmail = async (cartItems) => {
   const params = {
     message: cartItems.join(", "),
     selected_items: cartItems.join(", "),
@@ -30,7 +30,7 @@ export const sendBreakfastEmail = async (cartItems) => {
     return response;
   } catch (error) {
     const details = error?.text || error?.message || "Unknown email error.";
-    throw new Error(`Email send failed: ${details}`);
+    throw new Error(`Lunch email send failed: ${details}`);
   }
 };
 
@@ -47,6 +47,7 @@ export const sendFeedbackEmail = async ({ rating, feedback }) => {
 
   const params = {
     rating,
+    message: feedback,
     feedback,
     // Provide common aliases so template variable mismatch is less likely.
     to_email: TO_EMAIL,

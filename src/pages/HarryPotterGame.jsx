@@ -60,8 +60,8 @@ const HarryPotterGame = () => {
       navigator.vibrate?.(50);
       alert("You passed! Mischief Managed 🪄");
       localStorage.setItem("hp_passed", "true");
-      advanceToPath("/breakfast");
-      navigate("/breakfast", { replace: true });
+      advanceToPath("/lunch");
+      navigate("/lunch", { replace: true });
     } else {
       alert("You need more magic 😏 Try again!");
       window.location.reload();

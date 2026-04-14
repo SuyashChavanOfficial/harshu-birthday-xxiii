@@ -1,35 +1,17 @@
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { breakfastItems } from "../helpers/breakfastItems";
-import { sendBreakfastEmail } from "../utils/emailService";
+import { lunchItems } from "../helpers/lunchItems";
+import { sendLunchEmail } from "../utils/emailService";
 import { advanceToPath } from "../utils/progress";
 
-const getISTHour = () => {
-  const now = new Date();
-  return new Date(
-    now.toLocaleString("en-US", { timeZone: "Asia/Kolkata" }),
-  ).getHours();
-};
-
-const BreakfastPage = () => {
+const LunchPage = () => {
   const navigate = useNavigate();
   const [cart, setCart] = useState([]);
-  const [status, setStatus] = useState("open"); // before | open | closed
   const [isSending, setIsSending] = useState(false);
   const [errorMessage, setErrorMessage] = useState("");
   const [infoMessage, setInfoMessage] = useState("");
 
-  useEffect(() => {
-    const hour = getISTHour();
-
-    if (hour < 8) setStatus("before");
-    else if (hour >= 8 && hour < 12) setStatus("open");
-    else setStatus("closed");
-  }, []);
-
   const toggleItem = (item) => {
-    if (status !== "open") return;
-
     setCart((prev) =>
       prev.includes(item) ? prev.filter((i) => i !== item) : [...prev, item],
     );
@@ -39,19 +21,19 @@ const BreakfastPage = () => {
     if (cart.length === 0 || isSending) return;
 
     setErrorMessage("");
-    setInfoMessage("Sending your breakfast order...");
+    setInfoMessage("Sending your lunch order...");
     setIsSending(true);
 
     try {
-      await sendBreakfastEmail(cart);
-      localStorage.setItem("breakfast_confirmed", "true");
+      await sendLunchEmail(cart);
+      localStorage.setItem("lunch_confirmed", "true");
       advanceToPath("/feedback");
       setInfoMessage("Order sent successfully. Redirecting...");
       setTimeout(() => {
         navigate("/feedback", { replace: true });
       }, 800);
     } catch (error) {
-      console.error("Breakfast email send failed:", error);
+      console.error("Lunch email send failed:", error);
       const message =
         error?.message || "Could not send the order right now. Please try again.";
       setInfoMessage("");
@@ -61,32 +43,21 @@ const BreakfastPage = () => {
     }
   };
 
-  // UI states
-  if (status === "before") {
-    return <CenterMessage text="Too early 😴 Come back at 8 AM ❤️" />;
-  }
-
-  if (status === "closed") {
-    return (
-      <CenterMessage text="You missed breakfast 😏 But I still owe you one ❤️" />
-    );
-  }
-
   return (
     <div className="min-h-screen bg-[#0f0f14] text-white p-4">
       {/* Glow */}
       <div className="absolute w-[300px] h-[300px] bg-purple-600/20 blur-3xl top-10 left-10"></div>
       <div className="absolute w-[300px] h-[300px] bg-pink-600/20 blur-3xl bottom-10 right-10"></div>
 
-      <h1 className="text-2xl text-center mb-2">Choose Your Breakfast 🍽️</h1>
+      <h1 className="text-2xl text-center mb-2">Choose Your Lunch Thali 🍽️</h1>
 
       <p className="text-gray-400 text-center mb-6">
-        I’ll make it just how you like 😌
+        Pick your Indian lunch favorites and I’ll take care of the rest 😌
       </p>
 
       {/* Grid */}
       <div className="grid grid-cols-2 gap-4 max-w-md mx-auto">
-        {breakfastItems.map((item) => (
+        {lunchItems.map((item) => (
           <div
             key={item.name}
             onClick={() => toggleItem(item.name)}
@@ -121,10 +92,4 @@ const BreakfastPage = () => {
   );
 };
 
-const CenterMessage = ({ text }) => (
-  <div className="min-h-screen flex items-center justify-center bg-[#0f0f14] text-white text-center px-4">
-    <p className="text-xl">{text}</p>
-  </div>
-);
-
-export default BreakfastPage;
+export default LunchPage;
